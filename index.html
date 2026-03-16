@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Dashboard</title>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <!-- Our stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- ============================================================
+         DYNAMIC BACKGROUND LAYER
+         The JS will add a class here to switch gradient themes.
+    ============================================================ -->
+    <div class="bg-layer" id="bgLayer"></div>
+    <div class="wind-leaves" id="windLeaves"></div><!---------------------------------------------------------------------------------------->>
+
+    <!-- ============================================================
+         LOADING OVERLAY
+         Shown while API requests are in flight.
+    ============================================================ -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="spinner"></div>
+      <p class="loading-text">Fetching weather data…</p>
+    </div>
+
+    <!-- ============================================================
+         MAIN APP WRAPPER
+    ============================================================ -->
+    <div class="app-wrapper" id="appWrapper">
+
+      <!-- ── TOP BAR ── -->
+      <header class="top-bar">
+        <div class="brand">
+          <i class="fa-solid fa-cloud-sun brand-icon"></i>
+          <span class="brand-name">WeatherScope</span>
+        </div>
+
+        <!-- Search form -->
+        <form class="search-form" id="searchForm">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input
+              type="text"
+              id="cityInput"
+              class="search-input"
+              placeholder="Search city…"
+              autocomplete="off"
+            />
+            <button type="submit" class="search-btn">Go</button>
+          </div>
+          <!-- Error message shown inline when city not found -->
+          <p class="error-msg" id="errorMsg"></p>
+        </form>
+
+        <div class="unit-toggle">
+          <button class="unit-btn active" id="btnCelsius">°C</button>
+          <span class="unit-sep">|</span>
+          <button class="unit-btn" id="btnFahrenheit">°F</button>
+        </div>
+      </header>
+
+      <!-- ── MAIN CONTENT GRID ── -->
+      <main class="dashboard-grid">
+
+        <!-- ── LEFT COLUMN ── -->
+        <section class="left-col">
+
+          <!-- Current Weather Card -->
+          <div class="glass-card current-card">
+            <div class="current-top">
+              <div class="current-meta">
+                <h1 class="city-name" id="cityName">—</h1>
+                <p class="current-date" id="currentDate">—</p>
+                <p class="weather-desc" id="weatherDesc">—</p>
+              </div>
+              <div class="current-icon-wrap">
+                <img
+                  src=""
+                  alt="Weather icon"
+                  class="weather-icon"
+                  id="weatherIcon"
+                />
+              </div>
+            </div>
+            <div class="current-bottom">
+              <span class="temp-main" id="tempMain">—</span>
+              <div class="feels-like-wrap">
+                <span class="feels-label">Feels like</span>
+                <span class="feels-val" id="feelsLike">—</span>
+              </div>
+            </div>
+
+            <!-- Quick stats row -->
+            <div class="quick-stats">
+              <div class="qs-item">
+                <i class="fa-solid fa-droplet qs-icon"></i>
+                <span id="qsHumidity">—</span>
+                <small>Humidity</small>
+              </div>
+              <div class="qs-item">
+                <i class="fa-solid fa-wind qs-icon"></i>
+                <span id="qsWind">—</span>
+                <small>Wind</small>
+              </div>
+              <div class="qs-item">
+                <i class="fa-solid fa-eye qs-icon"></i>
+                <span id="qsVisibility">—</span>
+                <small>Visibility</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Today's Highlights Card -->
+          <div class="glass-card highlights-card">
+            <h2 class="section-title">
+              <i class="fa-solid fa-star"></i> Today's Highlights
+            </h2>
+            <div class="highlights-grid">
+
+              <div class="highlight-item">
+                <span class="hl-label">
+                  <i class="fa-solid fa-wind"></i> Wind Speed
+                </span>
+                <div class="hl-value-wrap">
+                  <span class="hl-value" id="hlWind">—</span>
+                  <small class="hl-unit" id="hlWindUnit">m/s</small>
+                </div>
+                <div class="wind-dir-wrap">
+                  <i class="fa-solid fa-compass hl-dir-icon"></i>
+                  <small id="hlWindDir">—</small>
+                </div>
+              </div>
+
+              <div class="highlight-item">
+                <span class="hl-label">
+                  <i class="fa-solid fa-droplet"></i> Humidity
+                </span>
+                <div class="hl-value-wrap">
+                  <span class="hl-value" id="hlHumidity">—</span>
+                  <small class="hl-unit">%</small>
+                </div>
+                <div class="progress-bar-wrap">
+                  <div class="progress-bar">
+                    <div class="progress-fill" id="humidityBar"></div>
+                  </div>
+                  <small id="humidityStatus">—</small>
+                </div>
+              </div>
+
+              <div class="highlight-item">
+                <span class="hl-label">
+                  <i class="fa-solid fa-gauge"></i> Pressure
+                </span>
+                <div class="hl-value-wrap">
+                  <span class="hl-value" id="hlPressure">—</span>
+                  <small class="hl-unit">hPa</small>
+                </div>
+              </div>
+
+              <div class="highlight-item">
+                <span class="hl-label">
+                  <i class="fa-solid fa-eye"></i> Visibility
+                </span>
+                <div class="hl-value-wrap">
+                  <span class="hl-value" id="hlVisibility">—</span>
+                  <small class="hl-unit">km</small>
+                </div>
+              </div>
+
+              <div class="highlight-item air-quality-item">
+                <span class="hl-label">
+                  <i class="fa-solid fa-leaf"></i> Air Quality Index
+                </span>
+                <div class="hl-value-wrap">
+                  <span class="hl-value" id="hlAQI">—</span>
+                  <span class="aqi-badge" id="aqiBadge">—</span>
+                </div>
+              </div>
+
+              <div class="highlight-item">
+                <span class="hl-label">
+                  <i class="fa-solid fa-temperature-half"></i> Dew Point
+                </span>
+                <div class="hl-value-wrap">
+                  <span class="hl-value" id="hlDewPoint">—</span>
+                  <small class="hl-unit" id="hlDewUnit">°C</small>
+                </div>
+              </div>
+
+            </div>
+          </div>
+         <!-- Hourly mini-chart -->
+          <div class="glass-card hourly-card">
+            <h2 class="section-title">
+              <i class="fa-solid fa-clock"></i> Hourly Forecast
+            </h2>
+            <div class="hourly-scroll" id="hourlyScroll">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+
+
+        </section>
+
+        <!-- ── RIGHT SIDEBAR ── -->
+        <aside class="right-col">
+          <div class="glass-card forecast-card">
+            <h2 class="section-title">
+              <i class="fa-solid fa-calendar-days"></i> 5-Day Forecast
+            </h2>
+            <!-- Forecast items injected by JS -->
+            <div class="forecast-list" id="forecastList">
+              <!-- Placeholder items for initial layout -->
+              <div class="forecast-item skeleton"></div>
+              <div class="forecast-item skeleton"></div>
+              <div class="forecast-item skeleton"></div>
+              <div class="forecast-item skeleton"></div>
+              <div class="forecast-item skeleton"></div>
+            </div>
+          </div>
+                    <!-- Sunrise / Sunset Card -->
+          <div class="glass-card sun-card">
+            <h2 class="section-title">
+              <i class="fa-solid fa-sun"></i> Sun Schedule
+            </h2>
+            <div class="sun-row">
+              <div class="sun-item">
+                <i class="fa-solid fa-sun sunrise-icon"></i>
+                <div>
+                  <small>Sunrise</small>
+                  <p class="sun-time" id="sunriseTime">—</p>
+                </div>
+              </div>
+              <!-- Day length progress arc -->
+              <div class="sun-arc-wrap">
+                <svg class="sun-arc" viewBox="0 0 120 60">
+                  <path
+                    d="M10,60 Q60,-10 110,60"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.2)"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    id="sunArcFill"
+                    d="M10,60 Q60,-10 110,60"
+                    fill="none"
+                    stroke="rgba(255,220,80,0.9)"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-dasharray="0 200"
+                  />
+                  <circle id="sunDot" cx="10" cy="60" r="5" fill="#FFD700" />
+                </svg>
+                <small class="day-length" id="dayLength">—</small>
+              </div>
+              <div class="sun-item">
+                <i class="fa-solid fa-moon sunset-icon"></i>
+                <div>
+                  <small>Sunset</small>
+                  <p class="sun-time" id="sunsetTime">—</p>
+                </div>
+              </div>
+            </div>
+          </div>
+ 
+        </aside>
+
+      </main>
+    </div><!-- end .app-wrapper -->
+
+    <!-- ============================================================
+         CHATBOT WIDGET
+    ============================================================ -->
+    <div class="chatbot-wrap" id="chatbotWrap">
+
+      <!-- Chat toggle button -->
+      <button class="chat-toggle-btn" id="chatToggleBtn" aria-label="Open weather advisor">
+        <i class="fa-solid fa-comment-dots chat-icon"></i>
+        <span class="chat-badge">AI</span>
+      </button>
+
+      <!-- Chat window -->
+      <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+          <i class="fa-solid fa-robot"></i>
+          <span>Weather Advisor</span>
+          <button class="chat-close-btn" id="chatCloseBtn" aria-label="Close chat">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <!-- Welcome message injected by JS on open -->
+        </div>
+
+        <div class="chat-quick-btns" id="chatQuickBtns">
+          <button class="qbtn" data-q="Should I carry an umbrella?">☂ Umbrella?</button>
+          <button class="qbtn" data-q="Is it good to go outside today?">🚶 Go outside?</button>
+          <button class="qbtn" data-q="Can I dry clothes outside?">👕 Dry clothes?</button>
+          <button class="qbtn" data-q="Is it too windy today?">💨 Too windy?</button>
+          <button class="qbtn" data-q="Is it a good day for a vacation?">✈ Vacation?</button>
+          <button class="qbtn" data-q="Should I wear a jacket?">🧥 Jacket?</button>
+        </div>
+
+        <form class="chat-input-form" id="chatInputForm">
+          <input
+            type="text"
+            id="chatInput"
+            class="chat-input"
+            placeholder="Ask about the weather…"
+            autocomplete="off"
+          />
+          <button type="submit" class="chat-send-btn">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+
+    </div><!-- end .chatbot-wrap -->
+
+    <!-- Our JavaScript -->
+    <script src="script.js"></script>
+  </body>
+</html>
