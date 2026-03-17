@@ -29,7 +29,7 @@
 // Replace the empty string with your actual key, e.g.:
 //   const API_KEY = "abc123def456abc123def456abc12345";
 // ---------------------------------------------------------------
-const API_KEY = "c61c4cde5ac8aa5088fb17ef921444ae";
+const API_KEY = "";
 
 // Base URLs for the three OpenWeatherMap endpoints we use
 const BASE_URL       = "https://api.openweathermap.org/data/2.5";
