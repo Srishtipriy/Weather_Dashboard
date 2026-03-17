@@ -1,6 +1,5 @@
 /* ================================================================
    WeatherScope — script.js
-   Vanilla JavaScript for the weather dashboard.
 
    What this file does (overview):
      1. Defines the API key and base URLs
@@ -11,27 +10,12 @@
      6. Handles °C / °F unit switching
      7. Runs the chatbot weather advisor
 
-   HOW TO GET AN API KEY:
-     1. Visit https://openweathermap.org/api
-     2. Sign up for a free account
-     3. Go to "API keys" in your dashboard
-     4. Copy your key and paste it below
-================================================================ */
-
-
 /* ================================================================
    SECTION 1 — CONFIGURATION
-   ▼ INSERT YOUR API KEY IN THE VARIABLE BELOW ▼
 ================================================================ */
 
-// ---------------------------------------------------------------
-// INSERT YOUR OPENWEATHERMAP API KEY HERE
-// Replace the empty string with your actual key, e.g.:
-//   const API_KEY = "abc123def456abc123def456abc12345";
-// ---------------------------------------------------------------
 const API_KEY = "";
 
-// Base URLs for the three OpenWeatherMap endpoints we use
 const BASE_URL       = "https://api.openweathermap.org/data/2.5";
 const AIR_QUALITY_URL = "https://api.openweathermap.org/data/2.5/air_pollution";
 const ICON_URL       = "https://openweathermap.org/img/wn/";
@@ -119,22 +103,17 @@ const chatQuickBtns  = document.getElementById("chatQuickBtns");
    SECTION 4 — UTILITY HELPERS
 ================================================================ */
 
-/**
- * Show the loading spinner overlay.
- */
+/** * Show the loading spinner overlay.*/
 function showLoading() {
   loadingOverlay.classList.remove("hidden");
 }
 
-/**
- * Hide the loading spinner overlay.
- */
+/* * Hide the loading spinner overlay. */
 function hideLoading() {
   loadingOverlay.classList.add("hidden");
 }
 
-/**
- * Display an error message under the search bar.
+/*** Display an error message under the search bar.
  * @param {string} msg - The message to show (empty string clears it).
  */
 function showError(msg) {
